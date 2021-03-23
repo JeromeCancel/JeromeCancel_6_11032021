@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const userCtrl = require('../controllers/user');
+const verifyPassword = require('../middlewares/password');
 
 const rateLimit = require("express-rate-limit");
 
@@ -13,8 +14,8 @@ const limiter = rateLimit({
     message: "too much abusive request, wait 3 minutes",
 });
 
-// CREATE ROUTES FOR AUTENTIFICATION AND ADD LIMITER FOR THE LOGIN ROUTE //
-router.post('/signup', userCtrl.signup);
+// CREATE ROUTES FOR AUTENTIFICATION, ADD verifyPassword FOR SIGNUP AND limiter TO THE LOGIN ROUTE //
+router.post('/signup', verifyPassword, userCtrl.signup);
 router.post('/login', limiter, userCtrl.login);
 
 // EXPORT ROUTES //
