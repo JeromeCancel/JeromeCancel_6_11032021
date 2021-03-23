@@ -19,60 +19,10 @@ exports.createSauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-// LOGIC ROUTE FOR GET ALL SAUCES //
-exports.getAllSauce = (req, res, next) => {
-  Sauce.find()
-    .then((sauces) => res.status(200).json(sauces))
-    .catch((error) => res.status(400).json({ error }));
-};
-
-// LOGIC ROUTE FOR ONE SAUCE //
-exports.getOneSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce))
-    .catch((error) => res.status(404).json({ error }));
-};
-
-// LOGIC ROUTE FOR MODIFY SAUCE //
-exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file
-    ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`,
-      }
-    : { ...req.body };
-  Sauce.updateOne(
-    { _id: req.params.id },
-    { ...sauceObject, _id: req.params.id }
-  )
-    .then(() => res.status(200).json({ message: "Objet modified !" }))
-    .catch((error) => res.status(400).json({ error }));
-};
-
-// LOGIC ROUTE FOR DELETE SAUCE //
-exports.deleteSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => {
-      const filename = sauce.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        Sauce.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: "Objet deleted !" }))
-          .catch((error) => res.status(400).json({ error }));
-      });
-    })
-    .catch((error) => res.status(500).json({ error }));
-};
-
 // LOGIC ROUTE FOR THE MANAGEMENT OF LIKE/ DISLIKES //
 exports.likeSauce = (req, res, next) => {
-  console.log({ _id: req.params.id });
-  console.log({ likes: req.body.like });
-  console.log({ usersLiked: req.body.userId });
-
+  
   const sauceObject = req.body;
-  console.log(sauceObject);
 
   if (sauceObject.like === 1) {
     Sauce.updateOne(
@@ -124,4 +74,50 @@ exports.likeSauce = (req, res, next) => {
       })
       .catch((error) => res.status(400).json({ error }));
   }
+};
+
+// LOGIC ROUTE FOR MODIFY SAUCE //
+exports.modifySauce = (req, res, next) => {
+  const sauceObject = req.file ? 
+    {
+      ...JSON.parse(req.body.sauce),
+      imageUrl: `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`,
+    }
+    : { ...req.body };
+  Sauce.updateOne(
+    { _id: req.params.id },
+    { ...sauceObject, _id: req.params.id }
+  )
+    .then(() => res.status(200).json({ message: "Objet modified !" }))
+    .catch((error) => res.status(400).json({ error }));
+};
+
+// LOGIC ROUTE FOR DELETE SAUCE //
+exports.deleteSauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      const filename = sauce.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        Sauce.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: "Objet deleted !" }))
+          .catch((error) => res.status(400).json({ error }));
+      });
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+
+// LOGIC ROUTE FOR GET ALL SAUCES //
+exports.getAllSauce = (req, res, next) => {
+  Sauce.find()
+    .then((sauces) => res.status(200).json(sauces))
+    .catch((error) => res.status(400).json({ error }));
+};
+
+// LOGIC ROUTE FOR ONE SAUCE //
+exports.getOneSauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
+    .catch((error) => res.status(404).json({ error }));
 };

@@ -13,6 +13,7 @@ const sauceSchema = mongoose.Schema({
   dislikes: { type: Number, default: 0 },
   usersLiked: { type: [String] },
   usersDisliked: { type: [String] },
+  userId: { type: String, required: true },
 });
 
 // EXPORT SAUCE SCHEMA //
