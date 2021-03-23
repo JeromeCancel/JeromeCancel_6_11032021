@@ -9,7 +9,7 @@ exports.createSauce = (req, res, next) => {
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${
       req.file.filename
     }`,
   });
@@ -47,7 +47,6 @@ exports.likeSauce = (req, res, next) => {
   } else {
     Sauce.findOne({ _id: req.params.id })
       .then((sauce) => {
-        console.log(sauce);
         if (sauce.usersLiked.includes(req.body.userId)) {
           Sauce.updateOne(
             { _id: req.params.id },
@@ -77,28 +76,22 @@ exports.likeSauce = (req, res, next) => {
 };
 
 // LOGIC ROUTE FOR MODIFY SAUCE //
-exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file ? 
+exports.modifySauce= (req, res, next) => {
+  const sauceObject = req.file ?
     {
       ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`,
-    }
-    : { ...req.body };
-  Sauce.updateOne(
-    { _id: req.params.id },
-    { ...sauceObject, _id: req.params.id }
-  )
-    .then(() => res.status(200).json({ message: "Objet modified !" }))
-    .catch((error) => res.status(400).json({ error }));
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+  Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Objet modified !'}))
+    .catch(error => res.status(400).json({ error }));
 };
 
 // LOGIC ROUTE FOR DELETE SAUCE //
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
-      const filename = sauce.imageUrl.split("/images/")[1];
+      const filename = sauce.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: "Objet deleted !" }))

@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 // METHOD CALL FOR ALL ROUTES //
 app.use('/api/auth', userRoutes);
 app.use("/api/sauces", sauceRoutes);
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // EXPORT APP //
 module.exports = app;
