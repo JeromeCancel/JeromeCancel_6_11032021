@@ -2,6 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require("helmet");
+const nocache = require("nocache");
+const cookieSession = require("cookie-session");
+
 
 require('dotenv').config();
 
@@ -31,6 +34,22 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+// METHOD CALL FOR COOKIE-SESSION //
+app.use(
+  cookieSession({
+    name: "session",
+    secret: "s3CuR3T3",
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      domain: "http://localhost:3000/",
+    },
+  })
+);
+
+// METHOD CALL FOR NOCACHE //
+app.use(nocache());
 
 // METHOD CALL FOR BODYPARSER //
 app.use(bodyParser.json());
