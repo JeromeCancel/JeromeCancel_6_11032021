@@ -16,7 +16,7 @@ const path = require('path');
 // VARIABLE FOR MONGOOSE + CONNECTION AT THE DATABASE //
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_URI}`,
+mongoose.connect(`mongodb+srv://${process.env.DB_USER_USER}:${process.env.DB_PASS_USER}@${process.env.DB_URI}`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connection at MongoDB successful !'))
